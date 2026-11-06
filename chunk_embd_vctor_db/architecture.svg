@@ -1,0 +1,206 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .title { fill: #e2e8f0; font-size: 26px; font-weight: 700; }
+      .subtitle { fill: #94a3b8; font-size: 14px; }
+      .lane-label { fill: #64748b; font-size: 13px; font-weight: 700; letter-spacing: 1px; }
+      .node-box { fill: #1e293b; stroke-width: 2; rx: 12; ry: 12; }
+      .node-title { fill: #f1f5f9; font-size: 15px; font-weight: 700; }
+      .node-sub { fill: #94a3b8; font-size: 11px; }
+      .db-box { fill: #172554; stroke: #60a5fa; stroke-width: 2.5; rx: 16; ry: 16; }
+      .db-title { fill: #dbeafe; font-size: 19px; font-weight: 700; }
+      .db-sub { fill: #93c5fd; font-size: 12px; }
+      .connector { fill: none; stroke-width: 2; stroke-dasharray: 6 4; opacity: 0.55; }
+      .ingest-stroke { stroke: #38bdf8; }
+      .query-stroke { stroke: #fb923c; }
+    </style>
+
+    <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#fb923c"/>
+    </marker>
+  </defs>
+
+  <!-- background -->
+  <rect x="0" y="0" width="1200" height="780" fill="#0f172a"/>
+
+  <!-- title -->
+  <text x="40" y="44" class="title">Local RAG Pipeline — chunk_embd_vctor_db</text>
+  <text x="40" y="66" class="subtitle">PDF corpus → chunks + metadata → Ollama embeddings → Postgres/pgvector → retrieval → local LLM answer</text>
+
+  <!-- ===================== INGESTION LANE ===================== -->
+  <text x="40" y="118" class="lane-label">INGESTION (run once: python ingest.py)</text>
+
+  <!-- Node 1: PDF Corpus -->
+  <g>
+    <rect x="40" y="140" width="190" height="92" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <text x="60" y="170" class="node-title">1. PDF Corpus</text>
+    <text x="60" y="190" class="node-sub">aventro/pdf/*.pdf</text>
+    <text x="60" y="206" class="node-sub">first 5 files (MAX_PDF_FILES)</text>
+  </g>
+
+  <!-- Node 2: Document Loader -->
+  <g>
+    <rect x="280" y="140" width="190" height="92" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.4s" repeatCount="indefinite"/>
+    </rect>
+    <text x="300" y="170" class="node-title">2. Document Loader</text>
+    <text x="300" y="190" class="node-sub">PyPDFLoader</text>
+    <text x="300" y="206" class="node-sub">1 Document per PDF page</text>
+  </g>
+
+  <!-- Node 3: Text Chunker -->
+  <g>
+    <rect x="520" y="140" width="210" height="92" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.8s" repeatCount="indefinite"/>
+    </rect>
+    <text x="540" y="170" class="node-title">3. Text Chunker</text>
+    <text x="540" y="190" class="node-sub">RecursiveCharacterTextSplitter</text>
+    <text x="540" y="206" class="node-sub">800 chars / 120 overlap + metadata</text>
+  </g>
+
+  <!-- Node 4: Embeddings -->
+  <g>
+    <rect x="770" y="140" width="220" height="92" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+    </rect>
+    <text x="790" y="170" class="node-title">4. Embeddings</text>
+    <text x="790" y="190" class="node-sub">Ollama · nomic-embed-text</text>
+    <text x="790" y="206" class="node-sub">768-dim vector per chunk</text>
+  </g>
+
+  <!-- arrows: ingestion lane left to right -->
+  <path d="M230,186 H278" class="connector ingest-stroke" marker-end="url(#arrow-blue)"/>
+  <path d="M470,186 H518" class="connector ingest-stroke" marker-end="url(#arrow-blue)"/>
+  <path d="M730,186 H768" class="connector ingest-stroke" marker-end="url(#arrow-blue)"/>
+
+  <!-- flowing dots along ingestion arrows -->
+  <circle r="4" fill="#38bdf8">
+    <animateMotion dur="1.4s" repeatCount="indefinite" path="M230,186 H278"/>
+  </circle>
+  <circle r="4" fill="#38bdf8">
+    <animateMotion dur="1.4s" repeatCount="indefinite" begin="0.3s" path="M470,186 H518"/>
+  </circle>
+  <circle r="4" fill="#38bdf8">
+    <animateMotion dur="1.4s" repeatCount="indefinite" begin="0.6s" path="M730,186 H768"/>
+  </circle>
+
+  <!-- elbow connector: Embeddings down into DB -->
+  <path id="ingest-to-db" d="M880,232 V300 Q880,320 860,320 H740 Q720,320 720,340 V358" class="connector ingest-stroke" marker-end="url(#arrow-blue)"/>
+  <circle r="4" fill="#38bdf8">
+    <animateMotion dur="2s" repeatCount="indefinite" begin="0.9s">
+      <mpath href="#ingest-to-db"/>
+    </animateMotion>
+  </circle>
+
+  <!-- ===================== VECTOR DATABASE (center) ===================== -->
+  <g>
+    <rect x="460" y="360" width="360" height="110" class="db-box">
+      <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.4s" repeatCount="indefinite"/>
+    </rect>
+    <text x="640" y="396" text-anchor="middle" class="db-title">PostgreSQL + pgvector</text>
+    <text x="640" y="418" text-anchor="middle" class="db-sub">table: document_chunks (id, content, embedding VECTOR(768), metadata JSONB)</text>
+    <text x="640" y="436" text-anchor="middle" class="db-sub">HNSW index · cosine distance (&lt;=&gt;)</text>
+    <text x="640" y="454" text-anchor="middle" class="db-sub">db: aventro_rag_db · local, trust-auth</text>
+  </g>
+
+  <!-- ===================== QUERY LANE ===================== -->
+  <text x="40" y="528" class="lane-label">QUERY (run anytime: python ask.py "question")</text>
+
+  <!-- Node A: Your Question -->
+  <g>
+    <rect x="40" y="550" width="190" height="92" class="node-box" stroke="#fb923c">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <text x="60" y="580" class="node-title">A. Your Question</text>
+    <text x="60" y="600" class="node-sub">e.g. "How do I change</text>
+    <text x="60" y="614" class="node-sub">a tyre on an Aventro car?"</text>
+  </g>
+
+  <!-- Node B: Embed Query -->
+  <g>
+    <rect x="280" y="550" width="190" height="92" class="node-box" stroke="#fb923c">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.4s" repeatCount="indefinite"/>
+    </rect>
+    <text x="300" y="580" class="node-title">B. Embed Query</text>
+    <text x="300" y="600" class="node-sub">same nomic-embed-text</text>
+    <text x="300" y="614" class="node-sub">model as ingestion</text>
+  </g>
+
+  <!-- Node C: Top-K Chunks -->
+  <g>
+    <rect x="520" y="550" width="210" height="92" class="node-box" stroke="#fb923c">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.8s" repeatCount="indefinite"/>
+    </rect>
+    <text x="540" y="580" class="node-title">C. Top-K Chunks</text>
+    <text x="540" y="600" class="node-sub">ORDER BY embedding &lt;=&gt; query</text>
+    <text x="540" y="614" class="node-sub">LIMIT 4, with similarity score</text>
+  </g>
+
+  <!-- Node D: Local LLM -->
+  <g>
+    <rect x="770" y="550" width="190" height="92" class="node-box" stroke="#fb923c">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+    </rect>
+    <text x="790" y="580" class="node-title">D. Ollama LLM</text>
+    <text x="790" y="600" class="node-sub">llama3.2</text>
+    <text x="790" y="614" class="node-sub">answers from context only</text>
+  </g>
+
+  <!-- Node E: Answer -->
+  <g>
+    <rect x="1000" y="550" width="160" height="92" class="node-box" stroke="#fb923c">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="1.6s" repeatCount="indefinite"/>
+    </rect>
+    <text x="1020" y="580" class="node-title">E. Answer</text>
+    <text x="1020" y="600" class="node-sub">grounded in your</text>
+    <text x="1020" y="614" class="node-sub">own PDF corpus</text>
+  </g>
+
+  <!-- arrows: query lane left to right -->
+  <path d="M230,596 H278" class="connector query-stroke" marker-end="url(#arrow-orange)"/>
+  <path d="M960,596 H998" class="connector query-stroke" marker-end="url(#arrow-orange)"/>
+
+  <circle r="4" fill="#fb923c">
+    <animateMotion dur="1.4s" repeatCount="indefinite" path="M230,596 H278"/>
+  </circle>
+  <circle r="4" fill="#fb923c">
+    <animateMotion dur="1.4s" repeatCount="indefinite" begin="1.8s" path="M960,596 H998"/>
+  </circle>
+
+  <!-- elbow: Embed Query up into DB -->
+  <path id="query-to-db" d="M375,548 V500 Q375,480 395,480 H540 Q560,480 560,460 V472" class="connector query-stroke" marker-end="url(#arrow-orange)"/>
+  <circle r="4" fill="#fb923c">
+    <animateMotion dur="2s" repeatCount="indefinite" begin="0.5s">
+      <mpath href="#query-to-db"/>
+    </animateMotion>
+  </circle>
+
+  <!-- elbow: DB down into Top-K Chunks -->
+  <path id="db-to-topk" d="M720,472 V500 Q720,520 700,520 H625 Q605,520 605,540 V548" class="connector query-stroke" marker-end="url(#arrow-orange)"/>
+  <circle r="4" fill="#fb923c">
+    <animateMotion dur="2s" repeatCount="indefinite" begin="1.1s">
+      <mpath href="#db-to-topk"/>
+    </animateMotion>
+  </circle>
+
+  <!-- arrow: Top-K Chunks -> LLM -->
+  <path d="M732,596 H768" class="connector query-stroke" marker-end="url(#arrow-orange)"/>
+  <circle r="4" fill="#fb923c">
+    <animateMotion dur="1.2s" repeatCount="indefinite" begin="1.5s" path="M732,596 H768"/>
+  </circle>
+
+  <!-- legend -->
+  <g transform="translate(40,690)">
+    <circle cx="6" cy="0" r="5" fill="#38bdf8"/>
+    <text x="18" y="4" class="node-sub">Ingestion data flow (one-time batch)</text>
+    <circle cx="6" cy="24" r="5" fill="#fb923c"/>
+    <text x="18" y="28" class="node-sub">Query data flow (every question)</text>
+  </g>
+
+  <text x="1160" y="770" text-anchor="end" class="node-sub">All components run 100% locally — no cloud API calls</text>
+</svg>

@@ -1,0 +1,16 @@
+# Core LangChain pieces used by the pipeline
+langchain-core>=1.6.0
+langchain-community>=0.4.0
+langchain-text-splitters>=1.1.0
+langchain-ollama>=1.1.0
+
+# PDF parsing (used by PyPDFLoader)
+pypdf>=6.6.2
+
+# Local Postgres + pgvector
+psycopg[binary]>=3.2,<4
+pgvector>=0.3,<1
+
+# Config + preflight checks
+python-dotenv>=1.2.1
+requests>=2.31
