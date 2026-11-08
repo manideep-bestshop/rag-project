@@ -1,0 +1,401 @@
+{
+  "total_test_cases": 10,
+  "valid_retrieval_cases": 9,
+  "metrics": {
+    "retrieval_hit_rate": {
+      "dense": "100.0%",
+      "sparse": "100.0%",
+      "hybrid": "100.0%"
+    },
+    "mean_reciprocal_rank_mrr": {
+      "dense": 1.0,
+      "sparse": 0.861,
+      "hybrid": 1.0
+    },
+    "average_faithfulness": "5.0/5.0",
+    "average_correctness": "4.8/5.0",
+    "average_latency_sec": 13.8
+  },
+  "results": [
+    {
+      "id": "TC01",
+      "category": "Procedural",
+      "query": "What are the initial safety precautions before changing a flat tyre on an Aventro car?",
+      "expected_doc": "Aventro Motors- How to Change a Tyre.pdf",
+      "dense_rank": 1,
+      "sparse_rank": 2,
+      "hybrid_rank": 1,
+      "ai_answer": "According to the context, the initial safety precautions before changing a flat tyre on an Aventro car are:\n\n1. Pull over to a safe, flat location away from traffic.\n2. Turn on your hazard lights.\n3. Apply the handbrake.\n4. Place wheel wedges/blocks (if available) to prevent vehicle movement.",
+      "ground_truth_answer": "Before changing a tyre, pull over to a safe, flat location away from traffic, turn on your hazard lights, apply the handbrake firmly, and place wheel wedges or blocks behind the tyres to prevent the vehicle from rolling.",
+      "faithfulness": 5,
+      "correctness": 5,
+      "keyword_coverage_pct": 100.0,
+      "judge_feedback": "The AI answer is faithful to the provided context and accurately matches the ground truth answer, with no notable hallucinations or inaccuracies.",
+      "latency_seconds": 21.48,
+      "retrieved_chunks": [
+        {
+          "source_file": " Aventro Motors- How to Change a Tyre.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.03252247488101534
+        },
+        {
+          "source_file": " Aventro Motors- How to Change a Tyre.pdf",
+          "chunk_index": 3,
+          "rrf_score": 0.031746031746031744
+        },
+        {
+          "source_file": " Aventro Motors- How to Change a Tyre.pdf",
+          "chunk_index": 1,
+          "rrf_score": 0.03128054740957967
+        },
+        {
+          "source_file": " Aventro Motors- How to Change a Tyre.pdf",
+          "chunk_index": 2,
+          "rrf_score": 0.03076923076923077
+        }
+      ]
+    },
+    {
+      "id": "TC02",
+      "category": "Procedural",
+      "query": "In what pattern and direction should you loosen and tighten the lug nuts when changing a tyre?",
+      "expected_doc": "Aventro Motors- How to Change a Tyre.pdf",
+      "dense_rank": 1,
+      "sparse_rank": 1,
+      "hybrid_rank": 1,
+      "ai_answer": "According to the context, you should tighten the lug nuts in a \"star pattern\" to ensure even pressure. The direction is not specified, but it is implied that the lug wrench should be used to turn the lug nuts counter-clockwise.",
+      "ground_truth_answer": "Loosen the lug nuts counter-clockwise slightly before lifting the car. When tightening, tighten them firmly in a star pattern (crisscross) to ensure even pressure.",
+      "faithfulness": 5,
+      "correctness": 4,
+      "keyword_coverage_pct": 100.0,
+      "judge_feedback": "The AI answer is faithful to the context but does not fully capture the nuance of the ground truth answer, missing the specific instruction to loosen lug nuts before lifting the car.",
+      "latency_seconds": 18.04,
+      "retrieved_chunks": [
+        {
+          "source_file": " Aventro Motors- How to Change a Tyre.pdf",
+          "chunk_index": 2,
+          "rrf_score": 0.03278688524590164
+        },
+        {
+          "source_file": " Aventro Motors- How to Change a Tyre.pdf",
+          "chunk_index": 3,
+          "rrf_score": 0.03225806451612903
+        },
+        {
+          "source_file": " Aventro Motors- How to Change a Tyre.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.03149801587301587
+        },
+        {
+          "source_file": " Aventro Motors- How to Change a Tyre.pdf",
+          "chunk_index": 1,
+          "rrf_score": 0.03057889822595705
+        }
+      ]
+    },
+    {
+      "id": "TC03",
+      "category": "Technical / Acronym",
+      "query": "What is ACC and what does the acronym stand for?",
+      "expected_doc": "Adaptive Cruise Control (ACC).pdf",
+      "dense_rank": 1,
+      "sparse_rank": 1,
+      "hybrid_rank": 1,
+      "ai_answer": "ACC stands for Adaptive Cruise Control.",
+      "ground_truth_answer": "ACC stands for Adaptive Cruise Control. It is an advanced driver assistance system (ADAS) that automatically adjusts the car's cruising speed to maintain a safe following distance from vehicles ahead.",
+      "faithfulness": 5,
+      "correctness": 5,
+      "keyword_coverage_pct": 33.3,
+      "judge_feedback": "The AI answer strictly matches the provided context and accurately conveys the factual meaning of the Ground Truth Answer.",
+      "latency_seconds": 12.65,
+      "retrieved_chunks": [
+        {
+          "source_file": "Adaptive Cruise Control (ACC).pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.03278688524590164
+        },
+        {
+          "source_file": "Adaptive Cruise Control (ACC).pdf",
+          "chunk_index": 3,
+          "rrf_score": 0.03200204813108039
+        },
+        {
+          "source_file": "Adaptive Cruise Control (ACC).pdf",
+          "chunk_index": 5,
+          "rrf_score": 0.0315136476426799
+        },
+        {
+          "source_file": "Adaptive Cruise Control (ACC).pdf",
+          "chunk_index": 4,
+          "rrf_score": 0.03125763125763126
+        }
+      ]
+    },
+    {
+      "id": "TC04",
+      "category": "Technical / Component",
+      "query": "What is the function of the ECU in the Adaptive Cruise Control system?",
+      "expected_doc": "Adaptive Cruise Control (ACC).pdf",
+      "dense_rank": 1,
+      "sparse_rank": 1,
+      "hybrid_rank": 1,
+      "ai_answer": "The ECU (Electronic Control Unit) processes sensor data and commands the throttle and brakes as needed, according to the Adaptive Cruise Control system's working principle.",
+      "ground_truth_answer": "The ECU (Electronic Control Unit) processes data from sensors (radar, cameras) and controls the vehicle's throttle and brakes as needed to maintain the set speed and distance.",
+      "faithfulness": 5,
+      "correctness": 5,
+      "keyword_coverage_pct": 100.0,
+      "judge_feedback": "The AI answer strictly follows the provided context and accurately matches the factual meaning of the Ground Truth Answer.",
+      "latency_seconds": 6.29,
+      "retrieved_chunks": [
+        {
+          "source_file": "Adaptive Cruise Control (ACC).pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.03278688524590164
+        },
+        {
+          "source_file": "Adaptive Cruise Control (ACC).pdf",
+          "chunk_index": 3,
+          "rrf_score": 0.03200204813108039
+        },
+        {
+          "source_file": "Adaptive Cruise Control (ACC).pdf",
+          "chunk_index": 5,
+          "rrf_score": 0.03200204813108039
+        },
+        {
+          "source_file": "Adaptive Cruise Control (ACC).pdf",
+          "chunk_index": 1,
+          "rrf_score": 0.03125
+        }
+      ]
+    },
+    {
+      "id": "TC05",
+      "category": "Variant / Specs",
+      "query": "What are the ADAS differences between Zoom SUV Variant X and Variant ZX?",
+      "expected_doc": "AventroZoom SUV.pdf",
+      "dense_rank": 1,
+      "sparse_rank": 1,
+      "hybrid_rank": 1,
+      "ai_answer": "According to the context, the ADAS (Advanced Driver Assistance Systems) differences between Zoom SUV Variant X and Variant ZX are:\n\n- Variant X (Level 1): Lane departure warning, forward collision warning\n- Variant ZX (Level 2): Lane keep assist, adaptive cruise control, emergency braking",
+      "ground_truth_answer": "Zoom SUV Variant X has ADAS Level 1 (lane departure warning and forward collision warning), whereas Variant ZX has ADAS Level 2 (lane keep assist, adaptive cruise control, and blind spot monitoring).",
+      "faithfulness": 5,
+      "correctness": 5,
+      "keyword_coverage_pct": 100.0,
+      "judge_feedback": "The AI answer accurately matches the Ground Truth Answer, with no additional features or incorrect information.",
+      "latency_seconds": 16.55,
+      "retrieved_chunks": [
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 2,
+          "rrf_score": 0.03252247488101534
+        },
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.03252247488101534
+        },
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 4,
+          "rrf_score": 0.03149801587301587
+        },
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 1,
+          "rrf_score": 0.031024531024531024
+        }
+      ]
+    },
+    {
+      "id": "TC06",
+      "category": "Variant / Specs",
+      "query": "What standard safety and audio features come on the Zoom SUV Base variant?",
+      "expected_doc": "AventroZoom SUV.pdf",
+      "dense_rank": 1,
+      "sparse_rank": 1,
+      "hybrid_rank": 1,
+      "ai_answer": "According to the context, the standard safety features for the Zoom SUV Base variant are:\n\n- Dual front airbags\n- ABS with EBD (Anti-lock Braking System with Electronic Brakeforce Distribution)\n\nThe standard audio feature for the Zoom SUV Base variant is:\n\n- Standard 7-inch Infotainment System",
+      "ground_truth_answer": "The Zoom SUV Base variant includes a standard 7-inch infotainment system, dual front airbags, ABS with EBD, manual AC, fabric seats, and rear parking sensors.",
+      "faithfulness": 5,
+      "correctness": 5,
+      "keyword_coverage_pct": 80.0,
+      "judge_feedback": "The AI answer strictly adheres to the provided context and accurately matches the ground truth answer, with no notable omissions or additions.",
+      "latency_seconds": 6.54,
+      "retrieved_chunks": [
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 2,
+          "rrf_score": 0.03252247488101534
+        },
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.03252247488101534
+        },
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 4,
+          "rrf_score": 0.03125763125763126
+        },
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 5,
+          "rrf_score": 0.03125
+        }
+      ]
+    },
+    {
+      "id": "TC07",
+      "category": "Fact Retrieval",
+      "query": "How many total employees does Aventro Motors employ and how are they distributed?",
+      "expected_doc": "About Aventro Motors.pdf",
+      "dense_rank": 1,
+      "sparse_rank": 4,
+      "hybrid_rank": 1,
+      "ai_answer": "According to the context, Aventro Motors employs over 2,000 people across India. The distribution of employees is as follows:\n\n- 700+ in manufacturing operations\n- 400+ in research, development, and product design\n- 500+ in sales and customer support\n- 400+ in various support and corporate functions",
+      "ground_truth_answer": "As of March 2024, Aventro Motors employs over 2,000 people across India: 700+ in manufacturing, 400+ in R&D and design, 500+ in sales/service/marketing, and 400+ in corporate/administration.",
+      "faithfulness": 5,
+      "correctness": 5,
+      "keyword_coverage_pct": 100.0,
+      "judge_feedback": "The AI answer is strictly grounded in the provided context and accurately matches the factual meaning of the ground truth answer.",
+      "latency_seconds": 17.05,
+      "retrieved_chunks": [
+        {
+          "source_file": "About Aventro Motors.pdf",
+          "chunk_index": 3,
+          "rrf_score": 0.032018442622950824
+        },
+        {
+          "source_file": "Adjusting the Seat Positions.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.03007688828584351
+        },
+        {
+          "source_file": "About Aventro Motors.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.029910714285714284
+        },
+        {
+          "source_file": "Adjusting the Seat Positions.pdf",
+          "chunk_index": 4,
+          "rrf_score": 0.029631255487269532
+        }
+      ]
+    },
+    {
+      "id": "TC08",
+      "category": "Fact Retrieval",
+      "query": "When was Aventro Motors founded and when was the manufacturing facility in Haryana established?",
+      "expected_doc": "About Aventro Motors.pdf",
+      "dense_rank": 1,
+      "sparse_rank": 1,
+      "hybrid_rank": 1,
+      "ai_answer": "Aventro Motors was founded in 2011, and the manufacturing facility in Haryana was established by 2015.",
+      "ground_truth_answer": "Aventro Motors was founded in 2010, and established its manufacturing facility in Haryana in 2015.",
+      "faithfulness": 5,
+      "correctness": 5,
+      "keyword_coverage_pct": 66.7,
+      "judge_feedback": "The AI answer strictly adheres to the provided context and accurately reflects the ground truth answer, with no apparent hallucinations or inaccuracies.",
+      "latency_seconds": 12.83,
+      "retrieved_chunks": [
+        {
+          "source_file": "About Aventro Motors.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.03278688524590164
+        },
+        {
+          "source_file": "About Aventro Motors.pdf",
+          "chunk_index": 3,
+          "rrf_score": 0.031754032258064516
+        },
+        {
+          "source_file": "About Aventro Motors.pdf",
+          "chunk_index": 1,
+          "rrf_score": 0.031754032258064516
+        },
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 5,
+          "rrf_score": 0.030090497737556562
+        }
+      ]
+    },
+    {
+      "id": "TC09",
+      "category": "Procedural",
+      "query": "What is the recommended position and distance for adjusting the headrest?",
+      "expected_doc": "Adjusting the Seat Positions.pdf",
+      "dense_rank": 1,
+      "sparse_rank": 1,
+      "hybrid_rank": 1,
+      "ai_answer": "The top of the headrest should be level with the top of your head, and it should be as close to the back of your head as possible for optimal safety.",
+      "ground_truth_answer": "The top of the headrest should be level with the top of the driver's head, and positioned within 2 to 4 cm (about two fingers' width) from the back of the head.",
+      "faithfulness": 5,
+      "correctness": 4,
+      "keyword_coverage_pct": 50.0,
+      "judge_feedback": "The AI answer is faithful to the provided context but slightly omits the specific distance range (2-4 cm) from the Ground Truth Answer.",
+      "latency_seconds": 13.46,
+      "retrieved_chunks": [
+        {
+          "source_file": "Adjusting the Seat Positions.pdf",
+          "chunk_index": 2,
+          "rrf_score": 0.03252247488101534
+        },
+        {
+          "source_file": "Adjusting the Seat Positions.pdf",
+          "chunk_index": 3,
+          "rrf_score": 0.032266458495966696
+        },
+        {
+          "source_file": "Adjusting the Seat Positions.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.0315136476426799
+        },
+        {
+          "source_file": "Adjusting the Seat Positions.pdf",
+          "chunk_index": 1,
+          "rrf_score": 0.03125
+        }
+      ]
+    },
+    {
+      "id": "TC10",
+      "category": "Guardrail / Out-of-Domain",
+      "query": "What is the warranty coverage duration for Aventro electric motorbikes?",
+      "expected_doc": "None (Out of Domain)",
+      "dense_rank": null,
+      "sparse_rank": null,
+      "hybrid_rank": null,
+      "ai_answer": "I don't know. The provided context only mentions Aventro Motors Pvt. Ltd. as an automobile manufacturer, but it does not mention electric motorbikes or their warranty coverage duration.",
+      "ground_truth_answer": "I don't know. The provided documents do not contain information about electric motorbikes or their warranty coverage.",
+      "faithfulness": 5,
+      "correctness": 5,
+      "keyword_coverage_pct": 50.0,
+      "judge_feedback": "Correctly refused out-of-domain question.",
+      "latency_seconds": 13.14,
+      "retrieved_chunks": [
+        {
+          "source_file": "About Aventro Motors.pdf",
+          "chunk_index": 1,
+          "rrf_score": 0.03200204813108039
+        },
+        {
+          "source_file": " AventroZoom SUV.pdf",
+          "chunk_index": 3,
+          "rrf_score": 0.03200204813108039
+        },
+        {
+          "source_file": "About Aventro Motors.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.030309988518943745
+        },
+        {
+          "source_file": "Adjusting the Seat Positions.pdf",
+          "chunk_index": 0,
+          "rrf_score": 0.030090497737556562
+        }
+      ]
+    }
+  ]
+}

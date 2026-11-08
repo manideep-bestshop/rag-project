@@ -4,3 +4,4 @@
 **/.env
 .DS_Store
 *.egg-info/
+**/bm25_store/*.pkl

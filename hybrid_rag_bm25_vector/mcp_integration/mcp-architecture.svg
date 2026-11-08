@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .title { fill: #f1f5f9; font-size: 24px; font-weight: 800; }
+      .subtitle { fill: #94a3b8; font-size: 13px; }
+      .lane-label { fill: #64748b; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+      .node-box { fill: #1e293b; stroke-width: 2; rx: 12; ry: 12; }
+      .node-title { fill: #f1f5f9; font-size: 14px; font-weight: 700; }
+      .node-sub { fill: #94a3b8; font-size: 11px; }
+      .server-box { fill: #241a4d; stroke: #9085e9; stroke-width: 2.5; rx: 16; ry: 16; }
+      .server-title { fill: #f1f5f9; font-size: 17px; font-weight: 800; }
+      .tool-item { fill: #e2e8f0; font-size: 11.5px; }
+      .connector { fill: none; stroke-width: 2; opacity: 0.7; }
+      .mcp-stroke { stroke: #d95926; stroke-dasharray: 6 4; }
+      .reuse-stroke { stroke: #3987e5; }
+      .ingest-stroke { stroke: #199e70; stroke-dasharray: 4 4; }
+    </style>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#d95926"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#3987e5"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#199e70"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="640" fill="#0f172a"/>
+
+  <text x="40" y="36" class="title">MCP Integration — Aventro Knowledge Server (proposed)</text>
+  <text x="40" y="58" class="subtitle">Any MCP client reuses the same hybrid retriever over stdio — 100% local, no network port</text>
+
+  <text x="40" y="92" class="lane-label">MCP CLIENTS (existing tools, unmodified)</text>
+  <text x="500" y="92" text-anchor="middle" class="lane-label">NEW: mcp_server.py</text>
+  <text x="995" y="92" text-anchor="middle" class="lane-label">EXISTING: hybrid RAG internals (unmodified)</text>
+
+  <!-- left column: MCP clients -->
+  <g>
+    <rect x="40" y="110" width="260" height="90" class="node-box" stroke="#d95926"/>
+    <text x="58" y="142" class="node-title">Claude Desktop</text>
+    <text x="58" y="162" class="node-sub">support rep asks a question</text>
+    <text x="58" y="178" class="node-sub">directly in chat</text>
+  </g>
+  <g>
+    <rect x="40" y="230" width="260" height="90" class="node-box" stroke="#d95926"/>
+    <text x="58" y="262" class="node-title">Claude Code</text>
+    <text x="58" y="282" class="node-sub">another repo's agent looks up</text>
+    <text x="58" y="298" class="node-sub">Aventro policy, no vendoring</text>
+  </g>
+  <g>
+    <rect x="40" y="350" width="260" height="90" class="node-box" stroke="#d95926"/>
+    <text x="58" y="382" class="node-title">Other MCP client</text>
+    <text x="58" y="402" class="node-sub">Slack bot, nightly QA script,</text>
+    <text x="58" y="418" class="node-sub">any MCP-aware agent</text>
+  </g>
+
+  <!-- arrows: clients -> server -->
+  <path d="M300,155 L468,220" class="connector mcp-stroke" marker-end="url(#arrow-orange)"/>
+  <path d="M300,275 L468,275" class="connector mcp-stroke" marker-end="url(#arrow-orange)"/>
+  <path d="M300,395 L468,330" class="connector mcp-stroke" marker-end="url(#arrow-orange)"/>
+  <text x="330" y="245" class="node-sub" fill="#f0a97a">stdio</text>
+
+  <!-- center: MCP server -->
+  <g>
+    <rect x="470" y="195" width="300" height="160" class="server-box"/>
+    <text x="620" y="225" text-anchor="middle" class="server-title">mcp_server.py</text>
+    <text x="620" y="243" text-anchor="middle" class="node-sub">stdio MCP server · same project .venv</text>
+    <text x="492" y="266" class="tool-item">• search_aventro_docs(query, top_k, engine)</text>
+    <text x="492" y="283" class="tool-item">• ask_aventro_question(question, engine)</text>
+    <text x="492" y="300" class="tool-item">• list_ingested_sources()</text>
+    <text x="492" y="317" class="tool-item">• resource: aventro://corpus/{source_file}</text>
+    <text x="492" y="340" class="node-sub">no new retrieval logic — pure adapter</text>
+  </g>
+
+  <!-- arrows: server -> internals -->
+  <path d="M770,220 L828,155" class="connector reuse-stroke" marker-end="url(#arrow-blue)"/>
+  <path d="M770,275 L828,275" class="connector reuse-stroke" marker-end="url(#arrow-blue)"/>
+  <path d="M770,330 L828,395" class="connector reuse-stroke" marker-end="url(#arrow-blue)"/>
+  <text x="818" y="245" text-anchor="end" class="node-sub" fill="#7fa8e8">calls / returns</text>
+
+  <!-- right column: existing internals -->
+  <g>
+    <rect x="830" y="110" width="330" height="90" class="node-box" stroke="#3987e5"/>
+    <text x="848" y="142" class="node-title">hybrid_retriever.py /</text>
+    <text x="848" y="160" class="node-title">ensemble_retriever.py</text>
+    <text x="848" y="180" class="node-sub">RRF fusion (custom loop or LangChain)</text>
+  </g>
+  <g>
+    <rect x="830" y="230" width="330" height="90" class="node-box" stroke="#3987e5"/>
+    <text x="848" y="262" class="node-title">BM25 pickle + Postgres/pgvector</text>
+    <text x="848" y="282" class="node-sub">bm25_store/bm25_index.pkl (sparse)</text>
+    <text x="848" y="298" class="node-sub">aventro_hybrid_rag_db (dense)</text>
+  </g>
+  <g>
+    <rect x="830" y="350" width="330" height="90" class="node-box" stroke="#3987e5"/>
+    <text x="848" y="382" class="node-title">Ollama (local)</text>
+    <text x="848" y="402" class="node-sub">nomic-embed-text (embeddings)</text>
+    <text x="848" y="418" class="node-sub">llama3.2 (answer generation)</text>
+  </g>
+
+  <!-- ingest.py, separate from MCP flow -->
+  <g>
+    <rect x="830" y="480" width="330" height="70" class="node-box" stroke="#199e70"/>
+    <text x="848" y="508" class="node-title">ingest.py (CLI, unchanged)</text>
+    <text x="848" y="526" class="node-sub">run separately — builds both indexes;</text>
+    <text x="848" y="540" class="node-sub">the MCP server only ever reads them</text>
+  </g>
+  <path d="M995,480 V320" class="connector ingest-stroke" marker-end="url(#arrow-teal)"/>
+
+  <!-- legend -->
+  <g transform="translate(40,580)">
+    <circle cx="6" cy="0" r="5" fill="#d95926"/>
+    <text x="18" y="4" class="node-sub">MCP stdio call (client ↔ server)</text>
+    <circle cx="280" cy="0" r="5" fill="#3987e5"/>
+    <text x="292" y="4" class="node-sub">Reused, unmodified hybrid RAG code</text>
+    <circle cx="590" cy="0" r="5" fill="#199e70"/>
+    <text x="602" y="4" class="node-sub">Batch ingestion (separate from query path)</text>
+  </g>
+
+  <text x="1160" y="615" text-anchor="end" class="node-sub">No HTTP port — stdio only, spawned locally by the MCP host</text>
+</svg>

@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 560" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .title { fill: #e2e8f0; font-size: 24px; font-weight: 700; }
+      .subtitle { fill: #94a3b8; font-size: 13px; }
+      .node-box { fill: #1e293b; stroke-width: 2; rx: 12; ry: 12; }
+      .node-title { fill: #f1f5f9; font-size: 14px; font-weight: 700; }
+      .node-sub { fill: #94a3b8; font-size: 10.5px; }
+      .skip-box { fill: #1e293b; stroke: #64748b; stroke-width: 2; stroke-dasharray: 5 4; rx: 12; ry: 12; }
+      .connector { fill: none; stroke-width: 2; stroke-dasharray: 6 4; opacity: 0.6; }
+      .orange-stroke { stroke: #d95926; }
+      .teal-stroke { stroke: #199e70; }
+      .blue-stroke { stroke: #3987e5; }
+      .violet-stroke { stroke: #9085e9; }
+      .skip-stroke { stroke: #64748b; }
+      .edge-label { fill: #94a3b8; font-size: 10.5px; }
+    </style>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d95926"/></marker>
+    <marker id="arrow-teal" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#199e70"/></marker>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#3987e5"/></marker>
+    <marker id="arrow-violet" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9085e9"/></marker>
+    <marker id="arrow-skip" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#64748b"/></marker>
+  </defs>
+
+  <rect x="0" y="0" width="1500" height="560" fill="#0f172a"/>
+
+  <text x="40" y="38" class="title">Claude Code Hooks — Auto-Grounding the Aventro Corpus (proposed)</text>
+  <text x="40" y="60" class="subtitle">UserPromptSubmit hook injects hybrid RAG context automatically — before Claude ever sees the raw prompt</text>
+
+  <!-- Node A: User Prompt -->
+  <g>
+    <rect x="40" y="150" width="160" height="92" class="node-box" stroke="#d95926">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <text x="58" y="180" class="node-title">A. User Prompt</text>
+    <text x="58" y="200" class="node-sub">"dead key fob</text>
+    <text x="58" y="214" class="node-sub">battery, what do I do?"</text>
+  </g>
+
+  <!-- Node B: Hook fires -->
+  <g>
+    <rect x="230" y="150" width="210" height="92" class="node-box" stroke="#d95926">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.3s" repeatCount="indefinite"/>
+    </rect>
+    <text x="248" y="180" class="node-title">B. UserPromptSubmit</text>
+    <text x="248" y="198" class="node-sub">aventro_ground.py</text>
+    <text x="248" y="214" class="node-sub">(.claude/hooks/), fires on EVERY prompt</text>
+  </g>
+
+  <!-- Node C: BM25 quick check -->
+  <g>
+    <rect x="470" y="150" width="190" height="92" class="node-box" stroke="#199e70">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <text x="488" y="180" class="node-title">C. BM25 Quick Check</text>
+    <text x="488" y="198" class="node-sub">bm25_store/bm25_index.pkl</text>
+    <text x="488" y="214" class="node-sub">sub-ms, no network — always runs</text>
+  </g>
+
+  <!-- Node D: Hybrid search -->
+  <g>
+    <rect x="690" y="150" width="210" height="92" class="node-box" stroke="#3987e5">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.9s" repeatCount="indefinite"/>
+    </rect>
+    <text x="708" y="180" class="node-title">D. Hybrid Search</text>
+    <text x="708" y="198" class="node-sub">embed_query (Ollama) + dense_search</text>
+    <text x="708" y="214" class="node-sub">(pgvector) + RRF fuse — only if relevant</text>
+  </g>
+
+  <!-- Node E: Inject context -->
+  <g>
+    <rect x="930" y="150" width="190" height="92" class="node-box" stroke="#9085e9">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+    </rect>
+    <text x="948" y="180" class="node-title">E. Inject Context</text>
+    <text x="948" y="198" class="node-sub">stdout JSON →</text>
+    <text x="948" y="214" class="node-sub">hookSpecificOutput.additionalContext</text>
+  </g>
+
+  <!-- Node F: Claude answers -->
+  <g>
+    <rect x="1150" y="150" width="190" height="92" class="node-box" stroke="#d95926">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+    </rect>
+    <text x="1168" y="180" class="node-title">F. Claude Answers</text>
+    <text x="1168" y="198" class="node-sub">grounded in the retrieved PDF —</text>
+    <text x="1168" y="214" class="node-sub">zero visible tool call</text>
+  </g>
+
+  <!-- main row arrows -->
+  <path d="M200,196 H228" class="connector orange-stroke" marker-end="url(#arrow-orange)"/>
+  <path d="M440,196 H468" class="connector orange-stroke" marker-end="url(#arrow-orange)"/>
+  <circle r="4" fill="#d95926"><animateMotion dur="1.3s" repeatCount="indefinite" path="M200,196 H228"/></circle>
+  <circle r="4" fill="#d95926"><animateMotion dur="1.3s" repeatCount="indefinite" begin="0.3s" path="M440,196 H468"/></circle>
+
+  <path d="M660,186 H688" class="connector teal-stroke" marker-end="url(#arrow-teal)"/>
+  <text x="674" y="140" text-anchor="middle" class="edge-label" fill="#4fc99a">&gt;= floor</text>
+  <circle r="4" fill="#199e70"><animateMotion dur="1.3s" repeatCount="indefinite" begin="0.6s" path="M660,186 H688"/></circle>
+
+  <path d="M900,196 H928" class="connector blue-stroke" marker-end="url(#arrow-blue)"/>
+  <path d="M1120,196 H1148" class="connector violet-stroke" marker-end="url(#arrow-violet)"/>
+  <circle r="4" fill="#3987e5"><animateMotion dur="1.3s" repeatCount="indefinite" begin="0.9s" path="M900,196 H928"/></circle>
+  <circle r="4" fill="#9085e9"><animateMotion dur="1.3s" repeatCount="indefinite" begin="1.2s" path="M1120,196 H1148"/></circle>
+
+  <!-- branch: C -> G (skip path) -->
+  <path d="M565,242 V320" class="connector skip-stroke" marker-end="url(#arrow-skip)"/>
+  <text x="580" y="270" class="edge-label">&lt; floor</text>
+  <circle r="4" fill="#64748b"><animateMotion dur="1.6s" repeatCount="indefinite" begin="0.6s" path="M565,242 V320"/></circle>
+
+  <g>
+    <rect x="460" y="320" width="210" height="80" class="skip-box"/>
+    <text x="478" y="348" class="node-title" fill="#cbd5e1">G. Skip — Not Relevant</text>
+    <text x="478" y="366" class="node-sub">exit 0, no output</text>
+    <text x="478" y="382" class="node-sub">Claude sees the raw prompt only (~0 cost)</text>
+  </g>
+
+  <!-- G -> F long elbow, bypassing D and E -->
+  <path id="skip-to-f" d="M670,384 H1245 V244" class="connector skip-stroke" marker-end="url(#arrow-skip)"/>
+  <circle r="4" fill="#64748b"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1s"><mpath href="#skip-to-f"/></animateMotion></circle>
+
+  <!-- legend -->
+  <g transform="translate(40,460)">
+    <circle cx="6" cy="0" r="5" fill="#d95926"/>
+    <text x="18" y="4" class="node-sub">Always-on request/response flow</text>
+    <circle cx="300" cy="0" r="5" fill="#199e70"/>
+    <text x="312" y="4" class="node-sub">Cheap, always-on relevance check (BM25)</text>
+    <circle cx="640" cy="0" r="5" fill="#3987e5"/>
+    <text x="652" y="4" class="node-sub">Expensive path — only if relevant (Ollama + pgvector)</text>
+    <circle cx="990" cy="0" r="5" fill="#9085e9"/>
+    <text x="1002" y="4" class="node-sub">Context injection</text>
+    <circle cx="1170" cy="0" r="5" fill="#64748b"/>
+    <text x="1182" y="4" class="node-sub">Skip path (not relevant)</text>
+  </g>
+
+  <text x="1460" y="540" text-anchor="end" class="node-sub">Proposed design — not yet implemented. Reuses hybrid_retriever.py / bm25_index.py unchanged.</text>
+</svg>

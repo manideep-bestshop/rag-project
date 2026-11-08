@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1300" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .h1 { fill: #f1f5f9; font-size: 30px; font-weight: 800; }
+      .h2 { fill: #94a3b8; font-size: 14px; }
+      .card-title { fill: #f1f5f9; font-size: 18px; font-weight: 700; }
+      .card-text  { fill: #cbd5e1; font-size: 13.5px; }
+      .card-strength { fill: #86efac; font-size: 13px; font-weight: 600; }
+      .card-weak { fill: #fca5a5; font-size: 13px; font-weight: 600; }
+      .example-label { fill: #fcd34d; font-size: 12.5px; font-weight: 700; }
+      .example-text { fill: #e2e8f0; font-size: 12.5px; }
+      .panel-title { fill: #f1f5f9; font-size: 19px; font-weight: 700; }
+      .mono { font-family: 'SF Mono', Consolas, Menlo, monospace; fill: #e2e8f0; font-size: 14px; }
+      .col-header { fill: #94a3b8; font-size: 12.5px; font-weight: 700; letter-spacing: 0.5px; }
+      .rank-label { fill: #e2e8f0; font-size: 12.5px; }
+      .score-label { fill: #f1f5f9; font-size: 13px; font-weight: 700; }
+      .callout { fill: #9085e9; font-size: 12px; font-weight: 700; }
+      .footer-title { fill: #f1f5f9; font-size: 13px; font-weight: 700; }
+      .footer-sub { fill: #94a3b8; font-size: 11px; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="1300" fill="#0f172a"/>
+
+  <!-- ===================== HEADER ===================== -->
+  <text x="600" y="48" text-anchor="middle" class="h1">What Is Hybrid RAG?</text>
+  <text x="600" y="76" text-anchor="middle" class="h2">Keyword search (BM25) + semantic search (vector embeddings), fused into one ranking — 100% local</text>
+
+  <!-- ===================== CARD 1: BM25 ===================== -->
+  <g>
+    <rect x="40" y="120" width="540" height="300" rx="16" fill="#1e293b" stroke="#199e70" stroke-width="2"/>
+    <!-- magnifying glass icon -->
+    <circle cx="70" cy="150" r="10" fill="none" stroke="#199e70" stroke-width="3"/>
+    <line x1="78" y1="158" x2="88" y2="168" stroke="#199e70" stroke-width="3" stroke-linecap="round"/>
+    <text x="100" y="158" class="card-title">BM25 — Sparse / Keyword Search</text>
+
+    <text x="64" y="190" class="card-text">Scores a chunk by exact-term overlap with the query:</text>
+    <text x="64" y="210" class="card-text">• Term frequency — repeats of a word in the chunk</text>
+    <text x="64" y="230" class="card-text">• Inverse document frequency — rare words count more</text>
+    <text x="64" y="250" class="card-text">• Length normalization — long chunks don't win for free</text>
+
+    <text x="64" y="280" class="card-strength">✓ Strength: nails acronyms, part numbers, model names</text>
+    <text x="64" y="300" class="card-weak">✗ Weakness: no notion of meaning — a paraphrase with</text>
+    <text x="64" y="317" class="card-weak">   zero shared words scores near zero</text>
+
+    <rect x="64" y="335" width="492" height="68" rx="8" fill="#0f2a22" stroke="#199e70" stroke-width="1"/>
+    <text x="78" y="356" class="example-label">REAL EXAMPLE — query "ACC"</text>
+    <text x="78" y="374" class="example-text">Chunk saying "ACC" 3× (ECU / working-principle para)</text>
+    <text x="78" y="391" class="example-text">scores highest → BM25 = 3.10, ranks #1 by keyword match</text>
+  </g>
+
+  <!-- ===================== CARD 2: Vector ===================== -->
+  <g>
+    <rect x="620" y="120" width="540" height="300" rx="16" fill="#1e293b" stroke="#3987e5" stroke-width="2"/>
+    <!-- vector / embedding icon -->
+    <circle cx="650" cy="150" r="3.5" fill="#3987e5"/>
+    <circle cx="670" cy="142" r="3.5" fill="#3987e5"/>
+    <circle cx="665" cy="160" r="3.5" fill="#3987e5"/>
+    <line x1="650" y1="150" x2="670" y2="142" stroke="#3987e5" stroke-width="1.5"/>
+    <line x1="650" y1="150" x2="665" y2="160" stroke="#3987e5" stroke-width="1.5"/>
+    <text x="684" y="158" class="card-title">Vector Search — Dense / Semantic</text>
+
+    <text x="644" y="190" class="card-text">Embeds text into a 768-dim vector (nomic-embed-text,</text>
+    <text x="644" y="210" class="card-text">local via Ollama) and ranks chunks by cosine similarity</text>
+    <text x="644" y="230" class="card-text">to the query vector — captures MEANING, not words.</text>
+
+    <text x="644" y="260" class="card-strength">✓ Strength: matches paraphrases — "won't start" ~</text>
+    <text x="644" y="277" class="card-strength">   "fails to crank" — zero shared vocabulary</text>
+    <text x="644" y="300" class="card-weak">✗ Weakness: can under-rank rare exact tokens; blurs</text>
+    <text x="644" y="317" class="card-weak">   acronyms/codes into "generally related" text</text>
+
+    <rect x="644" y="335" width="492" height="68" rx="8" fill="#15233f" stroke="#3987e5" stroke-width="1"/>
+    <text x="658" y="356" class="example-label">REAL EXAMPLE — query "ACC"</text>
+    <text x="658" y="374" class="example-text">The prose overview paragraph ranks #1 by cosine</text>
+    <text x="658" y="391" class="example-text">similarity (0.6092) — even over the chunk that says "ACC" 3×</text>
+  </g>
+
+  <!-- ===================== FUSION FORMULA PANEL ===================== -->
+  <g>
+    <rect x="40" y="450" width="1120" height="160" rx="16" fill="#1e293b" stroke="#9085e9" stroke-width="2"/>
+    <text x="64" y="484" class="panel-title">Fusing Both Rankings — Reciprocal Rank Fusion (RRF)</text>
+    <rect x="64" y="500" width="700" height="34" rx="6" fill="#241a4d"/>
+    <text x="80" y="523" class="mono">score(chunk) = Σ   1 / ( RRF_K + rank_in_that_list )        RRF_K = 60</text>
+    <text x="64" y="556" class="card-text">Only RANK POSITION matters, not raw score scale — so cosine similarity (0–1) and unbounded BM25 scores</text>
+    <text x="64" y="576" class="card-text">never need to be normalized against each other. Same method used by Elasticsearch &amp; Azure AI Search hybrid queries.</text>
+  </g>
+
+  <!-- ===================== BUMP CHART: REAL RESULT ===================== -->
+  <g>
+    <rect x="40" y="640" width="1120" height="500" rx="16" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+    <text x="64" y="676" class="panel-title">Real Result — Fused Ranking for Query "ACC"</text>
+    <text x="64" y="698" class="h2">python ask.py --no-generate --compare "ACC"  (actual local run, Oct 2026)</text>
+
+    <!-- column headers -->
+    <text x="300" y="736" text-anchor="middle" class="col-header">DENSE RANK (pgvector cosine)</text>
+    <text x="620" y="736" text-anchor="middle" class="col-header">SPARSE RANK (BM25 score)</text>
+    <text x="940" y="736" text-anchor="middle" class="col-header">FUSED RANK (RRF, k=60)</text>
+
+    <!-- rank gridlines -->
+    <g stroke="#334155" stroke-width="1" stroke-dasharray="3 4">
+      <line x1="180" y1="760" x2="1060" y2="760"/>
+      <line x1="180" y1="830" x2="1060" y2="830"/>
+      <line x1="180" y1="900" x2="1060" y2="900"/>
+      <line x1="180" y1="970" x2="1060" y2="970"/>
+    </g>
+    <g class="rank-label" fill="#64748b">
+      <text x="186" y="748" font-size="11">best</text>
+      <text x="186" y="988" font-size="11">worst</text>
+    </g>
+
+    <!-- chunk0: dense#1 -> sparse#4 -> fused#2 (blue) -->
+    <path d="M300,760 L620,970 L940,830" fill="none" stroke="#3987e5" stroke-width="2.5"/>
+    <!-- chunk3: dense#3 -> sparse#1 -> fused#1 (violet, the "promoted" chunk) -->
+    <path d="M300,900 L620,760 L940,760" fill="none" stroke="#9085e9" stroke-width="3.5"/>
+    <!-- chunk4: dense#4 -> sparse#2 -> fused#4 (orange) -->
+    <path d="M300,970 L620,830 L940,970" fill="none" stroke="#d95926" stroke-width="2.5"/>
+    <!-- chunk5: dense#2 -> sparse#3 -> fused#3 (teal) -->
+    <path d="M300,830 L620,900 L940,900" fill="none" stroke="#199e70" stroke-width="2.5"/>
+
+    <!-- markers -->
+    <g>
+      <circle cx="300" cy="760" r="6" fill="#3987e5"/><circle cx="620" cy="970" r="6" fill="#3987e5"/><circle cx="940" cy="830" r="6" fill="#3987e5"/>
+      <circle cx="300" cy="900" r="7" fill="#9085e9"/><circle cx="620" cy="760" r="7" fill="#9085e9"/><circle cx="940" cy="760" r="7" fill="#9085e9"/>
+      <circle cx="300" cy="970" r="6" fill="#d95926"/><circle cx="620" cy="830" r="6" fill="#d95926"/><circle cx="940" cy="970" r="6" fill="#d95926"/>
+      <circle cx="300" cy="830" r="6" fill="#199e70"/><circle cx="620" cy="900" r="6" fill="#199e70"/><circle cx="940" cy="900" r="6" fill="#199e70"/>
+    </g>
+
+    <!-- left labels: chunk + short description, at dense position -->
+    <g text-anchor="end" class="rank-label">
+      <text x="270" y="764">chunk 0 — overview paragraph</text>
+      <text x="270" y="834">chunk 5 — terminology glossary</text>
+      <text x="270" y="904">chunk 3 — ECU / working principle</text>
+      <text x="270" y="974">chunk 4 — resuming / example</text>
+    </g>
+
+    <!-- right labels: final RRF score, at fused position -->
+    <g class="score-label">
+      <text x="960" y="764">0.0323</text>
+      <text x="960" y="834">0.0320</text>
+      <text x="960" y="904">0.0320</text>
+      <text x="960" y="974">0.0318</text>
+    </g>
+
+    <!-- callout -->
+    <path d="M300,900 Q260,860 300,760" fill="none" stroke="#9085e9" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>
+    <text x="110" y="1005" class="callout">↑ chunk 3 was only #3 in dense search alone — BM25's strong keyword match (3× "ACC")</text>
+    <text x="110" y="1023" class="callout">   pulls it up to #1 in the fused ranking. Dense search alone would have shown it 3rd.</text>
+
+    <!-- legend -->
+    <g transform="translate(110,1060)">
+      <circle cx="0" cy="0" r="6" fill="#3987e5"/><text x="14" y="4" class="rank-label">chunk 0</text>
+      <circle cx="110" cy="0" r="6" fill="#199e70"/><text x="124" y="4" class="rank-label">chunk 5</text>
+      <circle cx="220" cy="0" r="6" fill="#9085e9"/><text x="234" y="4" class="rank-label">chunk 3 (promoted)</text>
+      <circle cx="400" cy="0" r="6" fill="#d95926"/><text x="414" y="4" class="rank-label">chunk 4</text>
+    </g>
+
+    <text x="1076" y="1060" text-anchor="end" class="h2">All 4 chunks are from Adaptive Cruise Control (ACC).pdf</text>
+  </g>
+
+  <!-- ===================== FOOTER: LOCAL STACK ===================== -->
+  <g transform="translate(40,1180)">
+    <rect x="0" y="0" width="1120" height="90" rx="14" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <text x="24" y="28" class="footer-title">100% Local Stack — no cloud APIs, no API keys</text>
+
+    <g transform="translate(24,44)">
+      <rect x="0" y="0" width="250" height="34" rx="8" fill="#0f2a22"/>
+      <text x="12" y="22" class="footer-sub">Ollama · nomic-embed-text + llama3.2</text>
+    </g>
+    <g transform="translate(288,44)">
+      <rect x="0" y="0" width="230" height="34" rx="8" fill="#15233f"/>
+      <text x="12" y="22" class="footer-sub">PostgreSQL + pgvector (dense)</text>
+    </g>
+    <g transform="translate(532,44)">
+      <rect x="0" y="0" width="230" height="34" rx="8" fill="#241a4d"/>
+      <text x="12" y="22" class="footer-sub">rank_bm25 pickle file (sparse)</text>
+    </g>
+    <g transform="translate(776,44)">
+      <rect x="0" y="0" width="320" height="34" rx="8" fill="#1e293b" stroke="#475569"/>
+      <text x="12" y="22" class="footer-sub">Python 3.13 · LangChain · psycopg3</text>
+    </g>
+  </g>
+</svg>

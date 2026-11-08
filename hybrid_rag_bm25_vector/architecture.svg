@@ -1,0 +1,230 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 920" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .title { fill: #e2e8f0; font-size: 25px; font-weight: 700; }
+      .subtitle { fill: #94a3b8; font-size: 13px; }
+      .lane-label { fill: #64748b; font-size: 13px; font-weight: 700; letter-spacing: 1px; }
+      .node-box { fill: #1e293b; stroke-width: 2; rx: 12; ry: 12; }
+      .node-title { fill: #f1f5f9; font-size: 14px; font-weight: 700; }
+      .node-sub { fill: #94a3b8; font-size: 10.5px; }
+      .db-box { fill: #172554; stroke-width: 2.5; rx: 16; ry: 16; }
+      .db-title { fill: #f1f5f9; font-size: 16px; font-weight: 700; }
+      .db-sub { fill: #cbd5e1; font-size: 11px; }
+      .fusion-box { fill: #2e1065; stroke: #a78bfa; stroke-width: 2.5; rx: 16; ry: 16; }
+      .connector { fill: none; stroke-width: 2; stroke-dasharray: 6 4; opacity: 0.6; }
+      .dense-stroke { stroke: #38bdf8; }
+      .sparse-stroke { stroke: #34d399; }
+      .fusion-stroke { stroke: #a78bfa; }
+      .answer-stroke { stroke: #fb923c; }
+    </style>
+
+    <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#34d399"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#a78bfa"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#fb923c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1300" height="920" fill="#0f172a"/>
+
+  <text x="40" y="40" class="title">Hybrid RAG — BM25 (sparse) + pgvector (dense), fully local</text>
+  <text x="40" y="62" class="subtitle">Same Aventro PDF corpus → same chunks → TWO independent indexes → fused ranking → local LLM answer</text>
+
+  <!-- ===================== INGESTION LANE ===================== -->
+  <text x="40" y="106" class="lane-label">INGESTION (run once: python ingest.py) — builds BOTH indexes from the same chunks</text>
+
+  <!-- Node 1: PDF Corpus -->
+  <g>
+    <rect x="40" y="140" width="190" height="92" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <text x="60" y="170" class="node-title">1. PDF Corpus</text>
+    <text x="60" y="190" class="node-sub">aventro/pdf/*.pdf</text>
+    <text x="60" y="206" class="node-sub">first 5 files (MAX_PDF_FILES)</text>
+  </g>
+
+  <!-- Node 2: Document Loader -->
+  <g>
+    <rect x="280" y="140" width="190" height="92" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.35s" repeatCount="indefinite"/>
+    </rect>
+    <text x="300" y="170" class="node-title">2. Document Loader</text>
+    <text x="300" y="190" class="node-sub">PyPDFLoader</text>
+    <text x="300" y="206" class="node-sub">1 Document per PDF page</text>
+  </g>
+
+  <!-- Node 3: Text Chunker -->
+  <g>
+    <rect x="520" y="140" width="220" height="92" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.7s" repeatCount="indefinite"/>
+    </rect>
+    <text x="540" y="170" class="node-title">3. Text Chunker</text>
+    <text x="540" y="190" class="node-sub">800 chars / 120 overlap</text>
+    <text x="540" y="206" class="node-sub">+ shared chunk_id metadata</text>
+  </g>
+
+  <!-- arrows: shared trunk -->
+  <path d="M230,186 H278" class="connector dense-stroke" marker-end="url(#arrow-blue)"/>
+  <path d="M470,186 H518" class="connector dense-stroke" marker-end="url(#arrow-blue)"/>
+  <circle r="4" fill="#38bdf8"><animateMotion dur="1.4s" repeatCount="indefinite" path="M230,186 H278"/></circle>
+  <circle r="4" fill="#38bdf8"><animateMotion dur="1.4s" repeatCount="indefinite" begin="0.3s" path="M470,186 H518"/></circle>
+
+  <!-- split: chunker -> dense branch (left) and sparse branch (right) -->
+  <path id="split-dense" d="M600,232 V258 H360 V288" class="connector dense-stroke" marker-end="url(#arrow-blue)"/>
+  <path id="split-sparse" d="M660,232 V258 H940 V288" class="connector sparse-stroke" marker-end="url(#arrow-teal)"/>
+  <circle r="4" fill="#38bdf8"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0.2s"><mpath href="#split-dense"/></animateMotion></circle>
+  <circle r="4" fill="#34d399"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0.2s"><mpath href="#split-sparse"/></animateMotion></circle>
+
+  <!-- Node 4a: Dense Embeddings -->
+  <g>
+    <rect x="250" y="290" width="220" height="90" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <text x="270" y="318" class="node-title">4a. Dense Embeddings</text>
+    <text x="270" y="338" class="node-sub">Ollama · nomic-embed-text</text>
+    <text x="270" y="354" class="node-sub">768-dim vector per chunk</text>
+  </g>
+
+  <!-- Node 4b: BM25 Tokenizer -->
+  <g>
+    <rect x="830" y="290" width="220" height="90" class="node-box" stroke="#34d399">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.35s" repeatCount="indefinite"/>
+    </rect>
+    <text x="850" y="318" class="node-title">4b. BM25 Tokenizer</text>
+    <text x="850" y="338" class="node-sub">lowercase + regex word split</text>
+    <text x="850" y="354" class="node-sub">no stemming — exact terms matter</text>
+  </g>
+
+  <!-- arrows down into DBs -->
+  <path d="M360,380 V408" class="connector dense-stroke" marker-end="url(#arrow-blue)"/>
+  <path d="M940,380 V408" class="connector sparse-stroke" marker-end="url(#arrow-teal)"/>
+  <circle r="4" fill="#38bdf8"><animateMotion dur="1.2s" repeatCount="indefinite" path="M360,380 V408"/></circle>
+  <circle r="4" fill="#34d399"><animateMotion dur="1.2s" repeatCount="indefinite" begin="0.3s" path="M940,380 V408"/></circle>
+
+  <!-- DB box: pgvector (DENSE, existing) -->
+  <g>
+    <rect x="150" y="410" width="420" height="112" class="db-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.4s" repeatCount="indefinite"/>
+    </rect>
+    <text x="360" y="438" text-anchor="middle" class="db-title">PostgreSQL + pgvector  (DENSE · existing)</text>
+    <text x="360" y="460" text-anchor="middle" class="db-sub">table: hybrid_document_chunks · embedding VECTOR(768)</text>
+    <text x="360" y="478" text-anchor="middle" class="db-sub">HNSW index · cosine distance (&lt;=&gt;)</text>
+    <text x="360" y="496" text-anchor="middle" class="db-sub">db: aventro_hybrid_rag_db · local, trust-auth</text>
+  </g>
+
+  <!-- DB box: BM25 (SPARSE, new) -->
+  <g>
+    <rect x="730" y="410" width="420" height="112" class="db-box" stroke="#34d399">
+      <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.4s" begin="0.4s" repeatCount="indefinite"/>
+    </rect>
+    <text x="940" y="438" text-anchor="middle" class="db-title">BM25 Index  (SPARSE · new)</text>
+    <text x="940" y="460" text-anchor="middle" class="db-sub">local pickle: bm25_store/bm25_index.pkl</text>
+    <text x="940" y="478" text-anchor="middle" class="db-sub">term freq · IDF · length norm (k1=1.5, b=0.75)</text>
+    <text x="940" y="496" text-anchor="middle" class="db-sub">no server — pure Python object on disk</text>
+  </g>
+
+  <!-- ===================== QUERY LANE ===================== -->
+  <text x="40" y="560" class="lane-label">QUERY (run anytime: python ask.py "question")</text>
+
+  <!-- Node A: Your Question -->
+  <g>
+    <rect x="40" y="665" width="190" height="92" class="node-box" stroke="#fb923c">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <text x="60" y="695" class="node-title">A. Your Question</text>
+    <text x="60" y="715" class="node-sub">e.g. "ACC" or</text>
+    <text x="60" y="729" class="node-sub">"how do I change a tyre?"</text>
+  </g>
+
+  <!-- Node B1: Dense Search -->
+  <g>
+    <rect x="300" y="585" width="230" height="92" class="node-box" stroke="#38bdf8">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.3s" repeatCount="indefinite"/>
+    </rect>
+    <text x="320" y="613" class="node-title">B1. Dense Search</text>
+    <text x="320" y="633" class="node-sub">embed query → pgvector</text>
+    <text x="320" y="649" class="node-sub">top 10 by cosine similarity</text>
+  </g>
+
+  <!-- Node B2: Sparse Search -->
+  <g>
+    <rect x="300" y="745" width="230" height="92" class="node-box" stroke="#34d399">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <text x="320" y="773" class="node-title">B2. Sparse Search</text>
+    <text x="320" y="793" class="node-sub">tokenize query → BM25</text>
+    <text x="320" y="809" class="node-sub">top 10 by BM25 score</text>
+  </g>
+
+  <!-- arrows A -> B1 / B2 -->
+  <path id="a-b1" d="M230,711 V631 H298" class="connector dense-stroke" marker-end="url(#arrow-blue)"/>
+  <path id="a-b2" d="M230,711 V791 H298" class="connector sparse-stroke" marker-end="url(#arrow-teal)"/>
+  <circle r="4" fill="#38bdf8"><animateMotion dur="1.8s" repeatCount="indefinite"><mpath href="#a-b1"/></animateMotion></circle>
+  <circle r="4" fill="#34d399"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0.3s"><mpath href="#a-b2"/></animateMotion></circle>
+
+  <!-- Node D: Fusion (RRF) -->
+  <g>
+    <rect x="600" y="641" width="220" height="155" class="fusion-box">
+      <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.2s" repeatCount="indefinite"/>
+    </rect>
+    <text x="710" y="675" text-anchor="middle" class="node-title">D. Fusion</text>
+    <text x="710" y="695" text-anchor="middle" class="db-sub">Reciprocal Rank Fusion</text>
+    <text x="710" y="715" text-anchor="middle" class="db-sub">score = Σ 1/(RRF_K + rank)</text>
+    <text x="710" y="733" text-anchor="middle" class="db-sub">engine: custom loop OR</text>
+    <text x="710" y="751" text-anchor="middle" class="db-sub">LangChain EnsembleRetriever</text>
+    <text x="710" y="769" text-anchor="middle" class="db-sub">keeps fused top TOP_K_FINAL=4</text>
+  </g>
+
+  <!-- arrows B1/B2 -> D -->
+  <path id="b1-d" d="M530,631 H565 V671 H598" class="connector dense-stroke" marker-end="url(#arrow-blue)"/>
+  <path id="b2-d" d="M530,791 H565 V751 H598" class="connector sparse-stroke" marker-end="url(#arrow-teal)"/>
+  <circle r="4" fill="#38bdf8"><animateMotion dur="1.6s" repeatCount="indefinite" begin="0.2s"><mpath href="#b1-d"/></animateMotion></circle>
+  <circle r="4" fill="#34d399"><animateMotion dur="1.6s" repeatCount="indefinite" begin="0.5s"><mpath href="#b2-d"/></animateMotion></circle>
+
+  <!-- Node E: Ollama LLM -->
+  <g>
+    <rect x="900" y="665" width="190" height="92" class="node-box" stroke="#fb923c">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="0.9s" repeatCount="indefinite"/>
+    </rect>
+    <text x="920" y="695" class="node-title">E. Ollama LLM</text>
+    <text x="920" y="715" class="node-sub">llama3.2</text>
+    <text x="920" y="731" class="node-sub">answers from fused context only</text>
+  </g>
+
+  <!-- Node F: Answer -->
+  <g>
+    <rect x="1140" y="665" width="140" height="92" class="node-box" stroke="#fb923c">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+    </rect>
+    <text x="1158" y="695" class="node-title">F. Answer</text>
+    <text x="1158" y="715" class="node-sub">grounded + cites</text>
+    <text x="1158" y="729" class="node-sub">source_file</text>
+  </g>
+
+  <!-- arrows D -> E -> F -->
+  <path d="M820,711 H898" class="connector fusion-stroke" marker-end="url(#arrow-purple)"/>
+  <path d="M1090,711 H1138" class="connector answer-stroke" marker-end="url(#arrow-orange)"/>
+  <circle r="4" fill="#a78bfa"><animateMotion dur="1.2s" repeatCount="indefinite" path="M820,711 H898"/></circle>
+  <circle r="4" fill="#fb923c"><animateMotion dur="1.2s" repeatCount="indefinite" begin="0.3s" path="M1090,711 H1138"/></circle>
+
+  <!-- legend -->
+  <g transform="translate(40,845)">
+    <circle cx="6" cy="0" r="5" fill="#38bdf8"/>
+    <text x="18" y="4" class="node-sub">Dense / semantic flow (pgvector)</text>
+    <circle cx="260" cy="0" r="5" fill="#34d399"/>
+    <text x="272" y="4" class="node-sub">Sparse / keyword flow (BM25)</text>
+    <circle cx="500" cy="0" r="5" fill="#a78bfa"/>
+    <text x="512" y="4" class="node-sub">Fusion (RRF)</text>
+    <circle cx="640" cy="0" r="5" fill="#fb923c"/>
+    <text x="652" y="4" class="node-sub">Final answer flow</text>
+  </g>
+
+  <text x="1260" y="900" text-anchor="end" class="node-sub">All components run 100% locally — no cloud API calls</text>
+</svg>

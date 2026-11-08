@@ -1,0 +1,26 @@
+# Core LangChain pieces used by the pipeline
+langchain-core>=1.6.0
+langchain-community>=0.4.0
+langchain-text-splitters>=1.1.0
+langchain-ollama>=1.1.0
+# Provides EnsembleRetriever (weighted RRF) + BM25Retriever, used by the
+# "ensemble" engine in ensemble_retriever.py as an alternative to the
+# hand-rolled fusion in hybrid_retriever.py. Optional: if a different
+# LangChain version ships these classes elsewhere (langchain-community or
+# the core langchain package), ensemble_retriever.py's resolver finds them
+# there instead -- and --engine custom works either way.
+langchain-classic>=1.0.0
+
+# PDF parsing (used by PyPDFLoader)
+pypdf>=6.6.2
+
+# Local Postgres + pgvector (dense/vector store)
+psycopg[binary]>=3.2,<4
+pgvector>=0.3,<1
+
+# Local BM25 sparse/keyword index (new vs. chunk_embd_vctor_db)
+rank-bm25>=0.2.2
+
+# Config + preflight checks
+python-dotenv>=1.2.1
+requests>=2.31
